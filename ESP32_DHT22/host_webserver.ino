@@ -1,96 +1,86 @@
 #include <WiFi.h>
-#include "DHT.h"
-
-// Defina o pino do sensor e o tipo de sensor
-#define DHTPIN 4
-#define DHTTYPE DHT22
-
-// Inicialize o objeto DHT
-DHT dht(DHTPIN, DHTTYPE);
+#include <WebServer.h>
+#include <DHT.h>
 
 // Defina o SSID e a senha para o ponto de acesso
 const char* ssid = "ESP32-AP";
 const char* password = "123456789";
 
-// Crie um objeto WiFiServer na porta 80
-WiFiServer server(80);
+// Configuração do sensor DHT
+#define DHTPIN 4 // Pino digital conectado ao sensor DHT
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+float humidity;
+float temperature;
+
+// Crie o objeto WebServer na porta 80
+WebServer server(80);
+
+// Função para servir a página HTML
+void handleRoot() {
+  // Leia os valores do sensor DHT
+  humidity = dht.readHumidity();
+  temperature = dht.readTemperature();
+
+  // Verifica se as leituras falharam e tenta novamente
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("Falha ao ler do sensor DHT!");
+    humidity = 0.0;
+    temperature = 0.0;
+  }
+
+  String html = "<!DOCTYPE html><html><head><title>ESP32 DHT11</title>\
+  <meta http-equiv='refresh' content='2'/></head><body>";
+  html += "<h1>ESP32 DHT11 Sensor</h1>";
+  html += "<p>Temperature: " + String(temperature) + " &deg;C</p>";
+  html += "<p>Humidity: " + String(humidity) + " %</p>";
+  html += "</body></html>";
+  server.send(200, "text/html", html);
+}
 
 void setup() {
+  // Iniciar comunicação serial
   Serial.begin(115200);
+  
+  // Inicializar o sensor DHT
   dht.begin();
-
-  // Inicialize o ponto de acesso
+  
+  // Inicializar o ponto de acesso
   WiFi.softAP(ssid, password);
   Serial.println();
   Serial.print("IP address: ");
   Serial.println(WiFi.softAPIP());
 
-  // Inicie o servidor
+  // Configurar o servidor para servir a página root
+  server.on("/", handleRoot);
+
+  // Iniciar o servidor
   server.begin();
 }
 
 void loop() {
-  // Verifica se há algum cliente conectado
-  WiFiClient client = server.available();
-  if (!client) {
-    return;
-  }
+  // Tratar as requisições do servidor
+  server.handleClient();
 
-  // Aguarde até que o cliente envie dados
-  Serial.println("New Client.");
-  while (!client.available()) {
-    delay(1);
-  }
+  // Aguarde alguns segundos entre as leituras
+  delay(2000);
 
-  // Leia a solicitação do cliente
-  String request = client.readStringUntil('\r');
-  Serial.println(request);
-  client.flush();
+  // Leia os valores do sensor DHT
+  humidity = dht.readHumidity();
+  temperature = dht.readTemperature();
 
-  // Leia a temperatura e a umidade
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
-
-  // Verifique se as leituras falharam e tente novamente
+  // Verifica se as leituras falharam e tenta novamente
   if (isnan(humidity) || isnan(temperature)) {
     Serial.println("Falha ao ler do sensor DHT!");
     return;
   }
 
-  // Crie a página web
-  String s = "<html>\
-  <head>\
-    <meta http-equiv='refresh' content='4'/>\
-    <meta name='viewport' content='width=device-width, initial-scale=1'>\
-    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr' crossorigin='anonymous'>\
-    <title>ESP32 DHT Server</title>\
-    <style>\
-    html { font-family: Arial; display: inline-block; margin: 0px auto; text-align: center;}\
-    h2 { font-size: 3.0rem; }\
-    p { font-size: 3.0rem; }\
-    .units { font-size: 1.2rem; }\
-    .dht-labels{ font-size: 1.5rem; vertical-align:middle; padding-bottom: 15px;}\
-    </style>\
-  </head>\
-  <body>\
-      <h2>ESP32 DHT Server!</h2>\
-      <p>\
-        <i class='fas fa-thermometer-half' style='color:#ca3517;'></i>\
-        <span class='dht-labels'>Temperature</span>\
-        <span>%.2f</span>\
-        <sup class='units'>&deg;C</sup>\
-      </p>\
-      <p>\
-        <i class='fas fa-tint' style='color:#00add6;'></i>\
-        <span class='dht-labels'>Humidity</span>\
-        <span>%.2f</span>\
-        <sup class='units'>&percnt;</sup>\
-      </p>\
-  </body>\
-</html>";
-
-  // Envie a resposta ao cliente
-  client.print(s);
-  delay(1);
-  Serial.println("Client disconnected.");
+  // Exibe os valores no Serial Monitor
+  Serial.print("Umidade: ");
+  Serial.print(humidity);
+  Serial.print(" %\t");
+  Serial.print("Temperatura: ");
+  Serial.print(temperature);
+  Serial.println(" *C");
 }
