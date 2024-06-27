@@ -1,6 +1,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <DHT.h>
+#include <ESPmDNS.h>
 
 // Defina o SSID e a senha da sua rede Wi-Fi pessoal
 const char* ssid = "plattinahs";
@@ -62,6 +63,11 @@ void setup() {
   Serial.println("Conectado à rede Wi-Fi!");
   Serial.print("Endereço IP: ");
   Serial.println(WiFi.localIP());
+
+  // Localizar pela url esp32.local ao invés do IP
+  if(MDNS.begin("esp32")) {
+    Serial.println("MDNS responder inicializado");
+  }
 
   // Configurar o servidor para servir os dados do sensor em JSON
   server.on("/data", handleData);
