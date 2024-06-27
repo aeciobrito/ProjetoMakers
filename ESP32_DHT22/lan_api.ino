@@ -37,7 +37,8 @@ void handleData() {
   json += "\"humidity\": " + String(humidity);
   json += "}";
 
-  // Envia a resposta JSON
+  // Adiciona os cabeçalhos CORS e envia a resposta JSON
+  server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "application/json", json);
 }
 
