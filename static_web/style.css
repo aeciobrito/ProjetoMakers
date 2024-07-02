@@ -29,11 +29,11 @@ body {
   }
   
   .data i {
-    color: #ca3517; /* Color for temperature icon */
+    color: #ca3517; /* Cor do ícone de temperatura */
   }
   
   .data i.fa-tint {
-    color: #00add6; /* Color for humidity icon */
+    color: #00add6; /* Color do ícone de humidade */
   }
   
   sup {

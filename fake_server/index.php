@@ -34,7 +34,6 @@
         const response = await fetch('http://localhost/aecio/ProjetoMakers/fake_server/mock_data.php');
         const data = await response.json();
 
-        // Update the table with data
         updateTable(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -43,7 +42,7 @@
 
     function updateTable(data) {
       const tableBody = document.getElementById('dataBody');
-      tableBody.innerHTML = ''; // Clear existing data
+      tableBody.innerHTML = ''; // Limpa dados existentes
 
       data.forEach(entry => {
         const row = document.createElement('tr');
@@ -66,7 +65,7 @@
 
     window.onload = function() {
       fetchData();
-      setInterval(fetchData, 4000); // Fetch data every second
+      setInterval(fetchData, 4000); // Busca dados a cada x segundos
     }
   </script>
 </head>

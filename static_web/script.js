@@ -9,12 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
           temperatureElement.textContent = data.temperature;
           humidityElement.textContent = data.humidity;
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.error('Erro ao buscar dados:', error));
     }
   
-    // Fetch data every 2 seconds
+    // Busca os dados a cada 2 segundos, tempo de atualização do módulo
     setInterval(fetchData, 2000);
   
-    // Fetch data immediately on load
+    // Busca os dados imediatamente ao carregar a página
     fetchData();
 });
