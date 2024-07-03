@@ -1,6 +1,8 @@
 <?php
 require 'config.php';
 
+date_default_timezone_set('America/Sao_Paulo');
+
 header('Content-Type: application/json');
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -37,16 +39,18 @@ function getCurrentReading($pdo) {
 
 function getTodayReadings($pdo) {
     $today = date('Y-m-d');
-    $stmt = $pdo->prepare('SELECT * FROM readings WHERE DATE(reading_time) = :today ORDER BY reading_time ASC');
+    $stmt = $pdo->prepare('SELECT * FROM readings WHERE DATE_FORMAT(reading_time, "%Y-%m-%d") = :today ORDER BY reading_time ASC');
     $stmt->execute(['today' => $today]);
-    $readings = $stmt->fetchAll();
+    $readings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($readings) {
         echo json_encode($readings);
     } else {
         echo json_encode(['error' => 'Nenhuma leitura encontrada para o dia de hoje']);
+        echo $today;
     }
 }
+
 
 function getRecommendation($temperature, $humidity) {
     $recommendation = [];
