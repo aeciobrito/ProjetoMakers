@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f7f7f7;
+}
+
+.container {
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.data {
+    font-size: 2rem;
+}
+
+.data p {
+    margin: 10px 0;
+}
+
+.data i {
+    color: #ca3517; /* Cor do ícone de temperatura */
+}
+
+.data i.fa-tint {
+    color: #00add6; /* Cor do ícone de humidade */
+}
+
+sup {
+    font-size: 1.2rem;
+}
+
+.chart-container {
+    margin-top: 20px;
+}
