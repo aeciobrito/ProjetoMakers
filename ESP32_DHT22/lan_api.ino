@@ -4,8 +4,8 @@
 #include <ESPmDNS.h>
 
 // Defina o SSID e a senha da sua rede Wi-Fi pessoal
-const char* ssid = "plattinahs";
-const char* password = "aeciobrito123";
+const char* ssid = "vivo";
+const char* password = "d4c3b21a";
 
 // Configuração do sensor DHT
 #define DHTPIN 4 // Pino digital conectado ao sensor DHT

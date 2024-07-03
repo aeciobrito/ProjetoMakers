@@ -1,7 +1,8 @@
 <?php
 require 'config.php';
 
-$esp32_url = 'http://esp32.local/data'; // URL do ESP32
+//$esp32_url = 'http://esp32.local/data'; // URL do ESP32
+$esp32_url = 'http://localhost/projetomakers/php/fake_data.php'; // URL dos dados mockados
 
 // Obter dados do ESP32
 $data = file_get_contents($esp32_url);
