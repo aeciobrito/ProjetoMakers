@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const humidityElement = document.getElementById('humidity');
   
     function fetchData() {
-      fetch('http://esp32.local/data')
+      //fetch('http://esp32.local/data')
+      fetch('http://localhost/projetomakers/php/fake_data.php')
         .then(response => response.json())
         .then(data => {
           temperatureElement.textContent = data.temperature;

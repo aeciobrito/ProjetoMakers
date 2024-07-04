@@ -1,5 +1,6 @@
 <?php
-header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json");
 
 // Generate fake data
 $temperature = rand(0, 50) + (rand(0, 99) / 100);
