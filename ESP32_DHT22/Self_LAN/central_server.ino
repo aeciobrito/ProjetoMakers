@@ -61,51 +61,37 @@ const char* htmlPage = R"rawliteral(
     .title-other-temperature { font-size: 5vw; }
     .alarm-container { display: grid; grid-template-columns: 1fr 1fr; justify-items: center; margin: 20px 0; }
     .alarm-control { background-color: #263375; height: 35vw; width: 40vw; border-radius: 20px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; padding: 0 15px; }
-    .subtitle-alarm-control { font-size: 4vw; padding: 0 5px; }
-    .title-alarm-control { font-size: 7vw; }
-    nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 50px; border-radius: 20px; background-color: white; box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-    .humidity-icon { display: inline-block; vertical-align: middle; margin-right: 5px; }
-    .humidity-text { display: inline-block; vertical-align: middle; }
+    .subtitle-alarm-control { font-size: 4vw; }
+    .title-alarm-control { font-size: 5vw; }
   </style>
 </head>
 <body onload='startWeatherUpdates()'>
   <header>
     <div class='container-header'>
       <div class='img-iconAlerta'>
-        <img src='https://avatars.githubusercontent.com/u/153244771?v=4' alt='imagem de perfil'>
-        <ion-icon name='notifications-outline' class='notificao'></ion-icon>
+        <img src='https://upload.wikimedia.org/wikipedia/commons/8/86/Senac_logo.svg' alt='Ícone Senac'>
+        <ion-icon name='notifications-outline'></ion-icon>
       </div>
       <div class='boasVindas'>
-        <h2>Olá, <b class='user'>Arthur</b></h2>
-        <span id='saudacao'></span>
+        <span>Olá, <span class='user'>Fulano de Tal</span></span>
+        <h2>Seja bem-vindo!</h2>
       </div>
     </div>
   </header>
   <main>
-    <div class='status_control' id='statusControl'>
-      <h2 id='temp-status'>Status atual</h2>
-      <h4 id='humi-status'>Umidade atual</h4>
+    <div class='status_control'>
+      <div>
+        <span id='temp-status'>Temperatura</span>
+        <span id='humi-status'>Umidade</span>
+      </div>
+      <div class='temperature-container'>
+        <div id='temperature' class='current-temperature'>--</div>
+        <div id='humidity' class='outside-temperature'>
+          <span class='subtitle-other-temperature'>Umidade</span>
+          <h3 class='title-other-temperature'>--%</h3>
+        </div>
+      </div>
     </div>
-    <section class='temperature-container'>
-      <div class='current-temperature'>
-        <div id='temperature'></div>°C
-      </div>
-      <div class='other_temperatures'>
-        <div class='outside-temperature warning'>
-          <span class='subtitle-other-temperature'>Humidade</span>
-          <h3 class='title-other-temperature'>
-            <i class='fas fa-tint humidity-icon' style='color: rgba(85, 158, 254, 1);'></i>
-            <span id='humidity' class='humidity-text'></span>
-          </h3>
-        </div>
-        <div class='outside-temperature warning'>
-          <span class='subtitle-other-temperature'>Externa</span>
-          <h3 class='title-other-temperature' id='extTemp'>
-            <i class='icone1 fas fa-temperature-low' style='color: rgba(255, 70, 70, 1);'></i> --°C
-          </h3>
-        </div>
-      </div>
-    </section>
     <div class='alarm-container'>
       <div class='alarm-control' id='minimumTemp'>
         <span class='subtitle-alarm-control'>Temp. Mínima</span>
@@ -159,6 +145,31 @@ const char* htmlPage = R"rawliteral(
 </html>
 )rawliteral";
 
+// Function to handle sensor data POST request
+void handlePostData() {
+  if (server.hasArg("plain") == false) { // Check if body is present
+    server.send(400, "text/plain", "Invalid Request");
+    return;
+  }
+
+  String body = server.arg("plain");
+  StaticJsonDocument<256> doc;
+  DeserializationError error = deserializeJson(doc, body);
+  if (error) {
+    server.send(400, "text/plain", "Invalid JSON");
+    return;
+  }
+
+  if (roomCount < maxRooms) {
+    sensorDataArray[roomCount].location = doc["location"].as<String>();
+    sensorDataArray[roomCount].temperature = doc["temperature"];
+    sensorDataArray[roomCount].humidity = doc["humidity"];
+    roomCount++;
+  }
+
+  server.send(200, "text/plain", "Data received");
+}
+
 // Function to return sensor data as JSON
 void handleSensorData() {
   StaticJsonDocument<2048> jsonDocument;  // Increased size for more data
@@ -190,7 +201,6 @@ void setup() {
   for (int i = 0; i < maxRooms; i++) {
     sensorDataArray[i] = {"Room " + String(i + 1), 0.0, 0.0};
   }
-  roomCount = maxRooms;
 
   // Start WiFi access point
   WiFi.softAP(ssid, password);
@@ -202,6 +212,7 @@ void setup() {
 
   // Set up URL handlers
   server.on("/", handleRoot);
+  server.on("/post-data", HTTP_POST, handlePostData);
   server.on("/sensorData", handleSensorData);
 
   // Start the server
@@ -210,11 +221,5 @@ void setup() {
 }
 
 void loop() {
-  // Simulate sensor data for demonstration purposes
-  for (int i = 0; i < roomCount; i++) {
-    sensorDataArray[i].temperature = 20.0 + (rand() % 100) / 10.0; // Random temperature
-    sensorDataArray[i].humidity = 50.0 + (rand() % 100) / 10.0;    // Random humidity
-  }
-
   server.handleClient();
 }
