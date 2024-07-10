@@ -15,7 +15,7 @@ const char* serverName = "http://192.168.4.1/post-data"; // Use the default AP I
 DHT dht(DHTPIN, DHTTYPE);
 
 // Room identifier
-const char* location = "room_a";
+const char* location = "Escritorio";
 
 void setup() {
   // Initialize serial communication
