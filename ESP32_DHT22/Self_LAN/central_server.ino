@@ -26,200 +26,431 @@ const char* htmlPage = R"rawliteral(
 <!DOCTYPE html>
 <html lang='pt-br'>
 <head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>Ambiente Controlado</title>
-  <link rel='preconnect' href='https://fonts.googleapis.com'>
-  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css'>
-  <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap' rel='stylesheet'>
-  <script type='module' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js'></script>
-  <script nomodule src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js'></script>
-  <style>
-    * { padding: 0; margin: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-    body { background-image: linear-gradient(rgba(0, 0, 0, 0) 20%, rgba(255, 255, 255, 1) 80%), url(assets/greenhouse2.jpg); background-size: cover; background-repeat: no-repeat; height: 100vh; background-position: center center; }
-    header { background-color: white; border-radius: 0 0 0 20px; padding: 15px 10px; width: 100%; border-radius: 20px; padding-bottom: 5px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.06), 0 8px 8px rgba(0, 0, 0, 0.04), 0 16px 16px rgba(0, 0, 0, 0.02); }
-    .container-header { margin: 15px 30px 30px 30px; }
-    .img-iconAlerta { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .img-iconAlerta img { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; }
-    .img-iconAlerta ion-icon { font-size: 40px; color: #004A8D; }
-    .user { font-weight: 900; }
-    .boasVindas { margin-left: 5px; margin-top: 15px; color: #263375; font-weight: 700; font-size: 1.1em; }
-    .boasVindas h2 { font-weight: 300; }
-    main { display: grid; grid-template-columns: 1fr; }
-    .itens-nav { width: 70%; max-width: 400px; }
-    .itens-nav { display: flex; justify-content: space-between; align-items: center; }
-    .itens-nav ion-icon { font-size: 24px; color: #0a3d7d; cursor: pointer; }
-    .ligar { display: flex; justify-content: center; align-items: center; background-color: white; border-radius: 50%; width: 90px; height: 90px; margin: 0 10px; }
-    .ligar .power { font-size: 35px; color: #0a3d7d; position: relative; bottom: 10px; }
-    .status_control { margin: 30px 20px; padding: 20px 10%; background-color: #263375; color: white; font-size: 1.2em; border-radius: 20px; text-align: center; display: flex; flex-direction: column; gap: 15px; }
-    .temperature-container { display: grid; grid-template-columns: 2fr 1fr; margin: 10px; padding: 10px; gap: 10px; justify-items: center; align-items: center; }
-    .current-temperature { border-radius: 50%; width: 55vw; height: 55vw; color: white; font-size: 10vw; text-align: center; display: flex; justify-content: center; align-items: center; background-color: #ffffff; box-shadow: 0px 0px 15px 5px #263375; color: #263375; }
-    .other_temperatures { display: grid; gap: 10px; justify-items: center; }
-    .outside-temperature { background-color: #263375; height: 28vw; width: 28vw; border-radius: 30%; color: white; display: flex; gap: 10px; flex-direction: column; justify-content: center; align-items: center; }
-    .subtitle-other-temperature { font-size: 4vw; }
-    .title-other-temperature { font-size: 5vw; }
-    .alarm-container { display: grid; grid-template-columns: 1fr 1fr; justify-items: center; margin: 20px 0; }
-    .alarm-control { background-color: #263375; height: 35vw; width: 40vw; border-radius: 20px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; padding: 0 15px; }
-    .subtitle-alarm-control { font-size: 4vw; }
-    .title-alarm-control { font-size: 5vw; }
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Temperatura e Humidade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+    * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+  }
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .conteudo-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  header {
+    width: 100%;
+    border-radius: 20px;
+    padding-bottom: 5px;
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.1),
+      0 2px 2px rgba(0, 0, 0, 0.15),
+      0 4px 4px rgba(0, 0, 0, 0.06),
+      0 8px 8px rgba(0, 0, 0, 0.04),
+      0 16px 16px rgba(0, 0, 0, 0.02);
+  }
+  
+  .container-header {
+    margin: 15px 30px 30px 30px;
+  }
+  
+  .img-iconAlerta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  
+  
+    & img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  
+    & ion-icon {
+      font-size: 40px;
+      color: #004A8D;
+    }
+  }
+  
+  .user {
+    font-weight: 900;
+  }
+  
+  .boasVindas {
+    margin-left: 5px;
+    margin-top: 15px;
+    color: #263375;
+    font-weight: 700;
+    font-size: 1.1em;
+  }
+  
+  .boasVindas h2 {
+    font-weight: 300;
+  }
+  
+  .t1 {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 700;
+    margin: 20px;
+  }
+  
+  .container-home {
+    margin: 10px 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    margin-bottom: 20px;
+  
+  }
+  
+  .cards {
+    /* max-width: 280px; */
+    width: 90%;
+    max-height: 200px;
+  }
+  
+  .cards a {
+    text-decoration: none;
+  }
+  
+  .cards img {
+    /* max-width: 300px; */
+    width: 100%;
+    height: 170px;
+    border-radius: 20px;
+    object-fit: cover;
+    filter: brightness(0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1), 0 12px 24px rgba(0, 0, 0, 0.05), 0 16px 32px rgba(0, 0, 0, 0.02);
+  }
+  
+  .descricao1 {
+    color: #FFF;
+    position: relative;
+    bottom: 58px;
+    left: 16px;
+    box-sizing: content-box;
+    /* max-width: fit-content; */
+    display: flex;
+    /* justify-content: space-between; */
+  
+    & p {
+      font-size: 0.7em;
+    }
+  }
+  
+  #weather {
+    position: relative;
+    bottom: 104px;
+    right: 24px;
+    font-size: 1em;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  
+  }
+  #temp-api{
+    font-size: 1.4em;
+    /* position: relative; */
+    /* left: 30px; */
+  }
+  #min-max{
+    font-size:0.8em;
+    font-weight: 300;
+    display: flex;
+    gap: 5px;
+  }
+  
+  #info-desc{
+    font-size: 0.7em;
+    
+  }
+  nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .itens-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 200px;
+  }
+  
+  .itens-nav ion-icon {
+    font-size: 24px;
+    color: #0a3d7d;
+    cursor: pointer;
+  }
+  
+  .ligar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    margin: 0 10px;
+  }
+  
+  .ligar .power {
+    font-size: 35px;
+    color: #0a3d7d;
+    position: relative;
+    bottom: 10px;
+  }
   </style>
 </head>
-<body onload='startWeatherUpdates()'>
-  <header>
-    <div class='container-header'>
-      <div class='img-iconAlerta'>
-        <img src='https://upload.wikimedia.org/wikipedia/commons/8/86/Senac_logo.svg' alt='Ícone Senac'>
-        <ion-icon name='notifications-outline'></ion-icon>
-      </div>
-      <div class='boasVindas'>
-        <span>Olá, <span class='user'>Fulano de Tal</span></span>
-        <h2>Seja bem-vindo!</h2>
-      </div>
-    </div>
-  </header>
-  <main>
-    <div class='status_control'>
-      <div>
-        <span id='temp-status'>Temperatura</span>
-        <span id='humi-status'>Umidade</span>
-      </div>
-      <div class='temperature-container'>
-        <div id='temperature' class='current-temperature'>--</div>
-        <div id='humidity' class='outside-temperature'>
-          <span class='subtitle-other-temperature'>Umidade</span>
-          <h3 class='title-other-temperature'>--%</h3>
+
+<body onload="saudacao()">
+    <header>
+        <div class="container-header">
+            <div class="img-iconAlerta">
+                <img src="https://avatars.githubusercontent.com/u/153244771?v=4" alt="imagem de perfil">
+                <ion-icon name="notifications-outline" class="notificao"></ion-icon>
+            </div>
+            <div class="boasVindas">
+                <h2>Olá, <b class="user">Arthur</b></h2>
+                <span id="saudacao"></span>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class='alarm-container'>
-      <div class='alarm-control' id='minimumTemp'>
-        <span class='subtitle-alarm-control'>Temp. Mínima</span>
-        <h3 class='title-alarm-control'>10°C</h3>
-      </div>
-      <div class='alarm-control' id='maximumTemp'>
-        <span class='subtitle-alarm-control'>Temp. Máxima</span>
-        <h3 class='title-alarm-control'>25°C</h3>
-      </div>
-    </div>
-  </main>
-  <nav>
-    <div class='itens-nav'>
-      <ion-icon name='home-outline'></ion-icon>
-      <ion-icon name='bar-chart-outline'></ion-icon>
-      <div class='ligar'>
-        <ion-icon name='power-outline' class='power'></ion-icon>
-      </div>
-      <ion-icon name='settings-outline'></ion-icon>
-      <ion-icon name='people-outline'></ion-icon>
-    </div>
-  </nav>
+    </header>
+    <main class="conteudo-home">
+        <section class="container-home">
+            <h1 class="t1">IOT Alarmes Inteligentes</h1>            
+            %DATA%
+        </section>
+    </main>
   <script>
-    function startWeatherUpdates() {
-      setInterval(getData, 2000);
+    document.addEventListener('DOMContentLoaded', function() {
+    const recommendationElement = document.getElementById('recommendation');
+    let recommendations = [];
+    const rooms = %ROOMCOUNT%;
+    const temperature = %TEMPERATURE%;
+    const humidity = %HUMIDITY%;
+    if (temperature > 30) {
+      recommendations.push('A temperatura está muito alta. Certifique-se de se manter hidratado.');
+    } else if (temperature < 10) {
+      recommendations.push('A temperatura está muito baixa. Mantenha-se aquecido.');
+    } else {
+      recommendations.push('A temperatura está agradável.');
+    }
+    if (humidity > 70) {
+      recommendations.push('A umidade está muito alta. Pode causar desconforto.');
+    } else if (humidity < 30) {
+      recommendations.push('A umidade está muito baixa. Pode causar secura na pele.');
+    } else {
+      recommendations.push('A umidade está em um nível confortável.');
+    }
+    recommendationElement.innerHTML = recommendations.map(rec => `<p>${rec}</p>`).join('');
+  });
+
+  function saudacao() {
+    var data = new Date();
+    var hora = data.getHours();
+    var saudacao;
+
+    if (hora >= 5 && hora < 13) {
+        saudacao = 'Bom dia';
+    } else if (hora >= 13 && hora < 18) {
+        saudacao = 'Boa tarde';
+    } else {
+        saudacao = 'Boa noite';
     }
 
-    function getData() {
-      fetch('/sensorData')
-        .then(response => response.json())
-        .then(data => updateUI(data));
-    }
+    document.getElementById('saudacao').innerText = saudacao + ", Bem Vindo!";
+  }
 
-    function updateUI(data) {
-      const tempStatus = document.getElementById('temp-status');
-      const humiStatus = document.getElementById('humi-status');
-      const temperatureDiv = document.getElementById('temperature');
-      const humidityDiv = document.getElementById('humidity');
+  async function getWeather(city, apiKey) {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=pt`;
 
-      // Update the first sensor data
-      if (data.length > 0) {
-        const sensorData = data[0];
-        tempStatus.textContent = `Temperatura ${sensorData.location}`;
-        humiStatus.textContent = `Umidade ${sensorData.location}`;
-        temperatureDiv.textContent = sensorData.temperature.toFixed(1);
-        humidityDiv.textContent = `${sensorData.humidity.toFixed(1)}%`;
+      try {
+          const response = await fetch(url);
+          if (!response.ok) {
+              throw new Error(`Erro ao fazer a solicitação: ${response.status}`);
+          }
+          const data = await response.json();
+          const temp = data.main.temp;
+          const tempMin = data.main.temp_min;
+          const tempMax = data.main.temp_max;
+          const humidity = data.main.humidity;
+          const weatherDescription = data.weather[0].description;
+          const weatherId = data.weather[0].id;
+
+          const weatherIconClass = getWeatherIconClass(weatherId);
+
+          document.getElementById('weather').innerHTML = `
+              <div><span id="temp-api">${temp}° <i class="wi ${weatherIconClass}" id="icone-temperatura"></i><br></span>
+              <p id="min-max">
+              <i class="wi wi-direction-down">Min:${tempMin}°</i>
+              <i class="wi wi-direction-up">Max:${tempMax}°</i><br>
+              </p>
+              </div>
+            
+          `;
+          document.getElementById('info-desc').innerHTML = `
+              <strong>Clima:</strong> ${weatherDescription.charAt(0).toUpperCase() + weatherDescription.slice(1)} <strong>Umidade:</strong> ${humidity}%
+          `;
+      } catch (error) {
+          document.getElementById('weather').innerText = error.message;
+          document.getElementById('info-desc').innerText = '';
       }
-    }
+  }
+
+  function getWeatherIconClass(weatherId) {
+      if (weatherId >= 200 && weatherId < 300) {
+          return 'wi-thunderstorm';
+      } else if (weatherId >= 300 && weatherId < 400) {
+          return 'wi-sprinkle';
+      } else if (weatherId >= 500 && weatherId < 600) {
+          return 'wi-rain';
+      } else if (weatherId >= 600 && weatherId < 700) {
+          return 'wi-snow';
+      } else if (weatherId >= 700 && weatherId < 800) {
+          return 'wi-fog';
+      } else if (weatherId === 800) {
+          return 'wi-day-sunny';
+      } else if (weatherId > 800) {
+          return 'wi-cloudy';
+      } else {
+          return 'wi-na';
+      }
+  }
+
+  const apiKey = '94753d611e61a7b1aaadf87ad8a8b030';
+  const city = 'São Paulo';
+
+  // Função para atualizar o clima periodicamente
+  function startWeatherUpdates() {
+      getWeather(city, apiKey);
+      setInterval(() => getWeather(city, apiKey), 300000); // Atualiza a cada 5 minutos
+  }
+
+  // Inicia as atualizações de clima
+  startWeatherUpdates();
   </script>
 </body>
 </html>
 )rawliteral";
 
-// Function to handle sensor data POST request
+// Function to handle root page
+void handleRoot() {
+  String dataHtml = "";
+  for (int i = 0; i < roomCount; i++) {
+    dataHtml += "<figure class='cards'><a href=#><img src='https://images.pexels.com/photos/731082/pexels-photo-731082.jpeg' alt='Imagem da casa'><figcaption class='descricao1'> ";
+    dataHtml += "<div><h4>" + sensorDataArray[i].location + "</h4><p>" + String(sensorDataArray[i].temperature) + " &deg;C, " + String(sensorDataArray[i].humidity) + " %</p></div>";
+    dataHtml += "<div><h4>Temperatura Externa</h4><p id='info-desc'>...</p></div><div class='recommendations'><h2>Recomendações</h2><div id='recommendation'></div></div><div id='weather'></div></figcaption></a></figure>";
+  }
+
+  String html = htmlPage;
+  html.replace("%DATA%", dataHtml);
+  html.replace("%ROOMCOUNT%", String(roomCount));
+  if (roomCount > 0) {
+    html.replace("%TEMPERATURE%", String(sensorDataArray[0].temperature));
+    html.replace("%HUMIDITY%", String(sensorDataArray[0].humidity));
+  } else {
+    html.replace("%TEMPERATURE%", "0");
+    html.replace("%HUMIDITY%", "0");
+  }
+
+  server.send(200, "text/html", html);
+}
+
+// Function to handle POST data
 void handlePostData() {
-  if (server.hasArg("plain") == false) { // Check if body is present
-    server.send(400, "text/plain", "Invalid Request");
+  if (server.hasArg("plain") == false) { // Check if body is received
+    server.send(400, "text/plain", "Body not received");
     return;
   }
 
   String body = server.arg("plain");
-  StaticJsonDocument<256> doc;
+  Serial.println("Received data: " + body);
+
+  DynamicJsonDocument doc(1024);
   DeserializationError error = deserializeJson(doc, body);
+
   if (error) {
-    server.send(400, "text/plain", "Invalid JSON");
+    Serial.print("deserializeJson() failed: ");
+    Serial.println(error.c_str());
     return;
   }
 
-  if (roomCount < maxRooms) {
-    sensorDataArray[roomCount].location = doc["location"].as<String>();
-    sensorDataArray[roomCount].temperature = doc["temperature"];
-    sensorDataArray[roomCount].humidity = doc["humidity"];
+  String location = doc["location"];
+  float temperature = doc["temperature"];
+  float humidity = doc["humidity"];
+
+  bool roomExists = false;
+
+  for (int i = 0; i < roomCount; i++) {
+    if (sensorDataArray[i].location == location) {
+      sensorDataArray[i].temperature = temperature;
+      sensorDataArray[i].humidity = humidity;
+      roomExists = true;
+      break;
+    }
+  }
+
+  if (!roomExists && roomCount < maxRooms) {
+    sensorDataArray[roomCount].location = location;
+    sensorDataArray[roomCount].temperature = temperature;
+    sensorDataArray[roomCount].humidity = humidity;
     roomCount++;
   }
 
   server.send(200, "text/plain", "Data received");
 }
 
-// Function to return sensor data as JSON
-void handleSensorData() {
-  StaticJsonDocument<2048> jsonDocument;  // Increased size for more data
-
-  JsonArray jsonArray = jsonDocument.to<JsonArray>();
-
-  for (int i = 0; i < roomCount; i++) {
-    JsonObject roomData = jsonArray.createNestedObject();
-    roomData["location"] = sensorDataArray[i].location;
-    roomData["temperature"] = sensorDataArray[i].temperature;
-    roomData["humidity"] = sensorDataArray[i].humidity;
-  }
-
-  String jsonString;
-  serializeJson(jsonDocument, jsonString);
-  server.send(200, "application/json", jsonString);
-}
-
-// Function to handle root endpoint
-void handleRoot() {
-  server.send(200, "text/html", htmlPage);
-}
-
-// Function to set up the server and WiFi
 void setup() {
+  // Start serial communication
   Serial.begin(115200);
 
-  // Initialize sensor data array
-  for (int i = 0; i < maxRooms; i++) {
-    sensorDataArray[i] = {"Room " + String(i + 1), 0.0, 0.0};
-  }
-
-  // Start WiFi access point
+  // Start the access point
   WiFi.softAP(ssid, password);
-  Serial.print("Access Point \"");
-  Serial.print(ssid);
-  Serial.println("\" started");
-  Serial.print("IP Address: ");
+  Serial.print("IP address: ");
   Serial.println(WiFi.softAPIP());
 
-  // Set up URL handlers
+  // Configure the server to serve the root page and handle POST data
   server.on("/", handleRoot);
   server.on("/post-data", HTTP_POST, handlePostData);
-  server.on("/sensorData", handleSensorData);
 
   // Start the server
   server.begin();
-  Serial.println("HTTP server started");
 }
 
 void loop() {
+  // Handle client requests
   server.handleClient();
 }
