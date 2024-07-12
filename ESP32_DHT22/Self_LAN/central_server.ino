@@ -1,10 +1,15 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <ArduinoJson.h>
+#include <ESPmDNS.h>
 
 // Access point credentials
 const char* ssid = "ESP32-AP";
 const char* password = "123456789";
+
+// Router credentials for internet access
+const char* routerSsid = "plattina";
+const char* routerPassword = "aeciobrito123";
 
 // Create the WebServer object on port 80
 WebServer server(80);
@@ -14,6 +19,7 @@ struct SensorData {
   String location;
   float temperature;
   float humidity;
+  String imageUrl;
 };
 
 // Array to hold data from multiple rooms
@@ -370,7 +376,7 @@ const char* htmlPage = R"rawliteral(
 void handleRoot() {
   String dataHtml = "";
   for (int i = 0; i < roomCount; i++) {
-    dataHtml += "<figure class='cards'><a href=#><img src='https://images.pexels.com/photos/731082/pexels-photo-731082.jpeg' alt='Imagem da casa'><figcaption class='descricao1'> ";
+    dataHtml += "<figure class='cards'><a href=#><img src='" + sensorDataArray[i].imageUrl + "' alt='Imagem do Local'><figcaption class='descricao1'> ";
     dataHtml += "<div><h4>" + sensorDataArray[i].location + "</h4><p>" + String(sensorDataArray[i].temperature) + " &deg;C, " + String(sensorDataArray[i].humidity) + " %</p></div>";
     dataHtml += "<div><h4>Temperatura Externa</h4><p id='info-desc'>...</p></div><div class='recommendations'><h2>Recomendações</h2><div id='recommendation'></div></div><div id='weather'></div></figcaption></a></figure>";
   }
@@ -411,6 +417,7 @@ void handlePostData() {
   String location = doc["location"];
   float temperature = doc["temperature"];
   float humidity = doc["humidity"];
+  String imageUrl = doc["imageUrl"];
 
   bool roomExists = false;
 
@@ -418,6 +425,7 @@ void handlePostData() {
     if (sensorDataArray[i].location == location) {
       sensorDataArray[i].temperature = temperature;
       sensorDataArray[i].humidity = humidity;
+      sensorDataArray[i].imageUrl = imageUrl;
       roomExists = true;
       break;
     }
@@ -427,6 +435,7 @@ void handlePostData() {
     sensorDataArray[roomCount].location = location;
     sensorDataArray[roomCount].temperature = temperature;
     sensorDataArray[roomCount].humidity = humidity;
+    sensorDataArray[roomCount].imageUrl = imageUrl;
     roomCount++;
   }
 
@@ -437,10 +446,25 @@ void setup() {
   // Start serial communication
   Serial.begin(115200);
 
+// Connect to router for internet access
+  WiFi.begin(routerSsid, routerPassword);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print("Connecting to WiFi...");
+    Serial.println(routerSsid);
+  }
+  Serial.print("Connected to WiFi: ");
+  Serial.println(routerSsid);
+
   // Start the access point
   WiFi.softAP(ssid, password);
   Serial.print("IP address: ");
   Serial.println(WiFi.softAPIP());
+
+  // Localizar pela url esp32.local ao invés do IP
+  if(MDNS.begin("esp32")) {
+    Serial.println("MDNS responder inicializado");
+  }
 
   // Configure the server to serve the root page and handle POST data
   server.on("/", handleRoot);

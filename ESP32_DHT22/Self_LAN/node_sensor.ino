@@ -16,6 +16,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // Room identifier
 const char* location = "Escritorio";
+const char* imageUrl = "https://assets.architecturaldigest.in/photos/600845b5eebcfd50ede87936/16:9/w_1920,c_limit/Bengaluru-home-Bodhi-Design-Studio-17-1366x768.jpg";
 
 void setup() {
   // Initialize serial communication
@@ -48,7 +49,7 @@ void loop() {
     }
 
     // Prepare JSON payload
-    String jsonPayload = "{\"location\":\"" + String(location) + "\",\"temperature\":" + String(temperature) + ",\"humidity\":" + String(humidity) + "}";
+    String jsonPayload = "{\"location\":\"" + String(location) + "\",\"temperature\":" + String(temperature) + ",\"humidity\":" + String(humidity) + ",\"imageUrl\":\"" + String(imageUrl) + "\"}";
 
     http.begin(serverName); // Specify the URL
     http.addHeader("Content-Type", "application/json"); // Specify content-type header
