@@ -37,130 +37,140 @@ const char* htmlPage = R"rawliteral(
   <title>Monitor de Temperatura e Humidade</title>
   <style>
     * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        font-family: "Roboto", sans-serif;
-      }
-      body {
-        background-color: #f0f0f0;
-      }
-      header {
-        width: 100%;
-        border-radius: 20px;
-        padding-bottom: 5px;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.06), 0 8px 8px rgba(0, 0, 0, 0.04), 0 16px 16px rgba(0, 0, 0, 0.02);
-        background-color: #ffffff;
-      }
-      .container-header {
-        margin: 15px 30px;
-        display: flex;
-        align-items: center;
-      }
-      .img-iconAlerta img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 50%;
-      }
-      .img-iconAlerta ion-icon {
-        font-size: 40px;
-        color: #004a8d;
-      }
-      .boasVindas {
-        margin-left: 10px;
-        color: #263375;
-        font-weight: 700;
-        font-size: 1.1em;
-      }
-      .boasVindas h2 {
-        font-weight: 300;
-      }
-      .t1 {
-        text-align: center;
-        font-size: 1.1em;
-        font-weight: 700;
-        margin: 20px;
-      }
-      .container-home {
-        margin: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-      }
-      .cards {
-        width: 90%;
-        max-height: 200px;
-        background-color: #ffffff;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1), 0 12px 24px rgba(0, 0, 0, 0.05), 0 16px 32px rgba(0, 0, 0, 0.02);
-      }
-      .cards a {
-        text-decoration: none;
-        color: inherit;
-      }
-      .cards img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: brightness(0.5);
-        border-radius: 20px 20px 0 0;
-      }
-      .descricao1 {
-        position: relative;
-        bottom: 58px;
-        left: 16px;
-        color: #fff;
-      }
-      .descricao1 p {
-        font-size: 0.7em;
-      }
-      #weather {
-        position: relative;
-        bottom: 104px;
-        right: 24px;
-        font-size: 1em;
-        font-weight: 600;
-      }
-      #temp-api {
-        font-size: 1.4em;
-      }
-      #min-max {
-        font-size: 0.8em;
-        font-weight: 300;
-        display: flex;
-        gap: 5px;
-      }
-      #info-desc {
-        font-size: 0.7em;
-      }
-      nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        border-radius: 20px 20px 0 0;
-        background-color: #ffffff;
-        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-      }
-      .itens-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 200px;
-      }
-      .itens-nav ion-icon {
-        font-size: 24px;
-        color: #0a3d7d;
-        cursor: pointer;
-      }
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: "Roboto", sans-serif;
+    }
+    body {
+      background-color: #f0f0f0;
+    }
+    header {
+      width: 100%;
+      border-radius: 20px;
+      padding-bottom: 5px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.06), 0 8px 8px rgba(0, 0, 0, 0.04), 0 16px 16px rgba(0, 0, 0, 0.02);
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+    }
+    .container-header {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
+    }
+    .img-iconAlerta img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .img-iconAlerta ion-icon {
+      font-size: 40px;
+      color: #004a8d;
+    }
+    .boasVindas {
+      margin-left: 10px;
+      color: #263375;
+      font-weight: 700;
+      font-size: 1.1em;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .boasVindas h2 {
+      font-weight: 300;
+    }
+    .t1 {
+      text-align: center;
+      font-size: 1.1em;
+      font-weight: 700;
+      margin: 20px;
+    }
+    .container-home {
+      margin: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .cards {
+      width: 90%;
+      max-height: 200px;
+      background-color: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1), 0 12px 24px rgba(0, 0, 0, 0.05), 0 16px 32px rgba(0, 0, 0, 0.02);
+    }
+    .cards a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .cards img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.5);
+      border-radius: 20px 20px 0 0;
+    }
+    .descricao1 {
+      position: relative;
+      bottom: 58px;
+      left: 16px;
+      color: #fff;
+    }
+    .descricao1 p {
+      font-size: 1.3em;
+    }
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      border-radius: 20px 20px 0 0;
+      background-color: #ffffff;
+      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .itens-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 200px;
+    }
+    .itens-nav ion-icon {
+      font-size: 24px;
+      color: #0a3d7d;
+      cursor: pointer;
+    }
+    .weather-container {
+      text-align: right;
+      color: #263375;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .weather-container #temp-api {
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+    .weather-container #min-max {
+      font-size: 0.8em;
+      font-weight: 300;
+      display: flex;
+      gap: 5px;
+      justify-content: flex-end;
+    }
+    .weather-container #info-desc {
+      font-size: 0.7em;
+    }
   </style>
 </head>
 <body>
@@ -173,7 +183,13 @@ const char* htmlPage = R"rawliteral(
       <div class="boasVindas">
         <h2>Olá, <b class="user">Campuseiro</b></h2>
       </div>
+      <div class="weather-container" id="weather">
+        <div id="temp-api"></div>
+        <div id="min-max"></div>
+        <div id="info-desc"></div>
+      </div>
     </div>
+  </header>
   </header>
   <main class="conteudo-home">
     <section class="container-home">
@@ -182,10 +198,9 @@ const char* htmlPage = R"rawliteral(
     </section>
   </main>  
   <script>
-
   window.onload = function() {
       fetchDataAndUpdate();
-      setInterval(fetchDataAndUpdate, 5000);
+      setInterval(fetchDataAndUpdate, 500);
     }
 
     function fetchDataAndUpdate() {
@@ -194,8 +209,6 @@ const char* htmlPage = R"rawliteral(
         .then(data => {
           const containerHome = document.querySelector('.container-home');
           containerHome.innerHTML = '';
-
-
           data.forEach(room => {
             const card = document.createElement('figure');
             card.classList.add('cards');
@@ -204,7 +217,6 @@ const char* htmlPage = R"rawliteral(
                 <img src="${room.imageUrl}" alt="Imagem do Local">
                 <figcaption class="descricao1">
                   <div><h4>${room.location}</h4><p>${room.temperature.toFixed(0)} &deg;C, ${room.humidity.toFixed(0)} %</p></div>
-                  <div id="weather"><div id="temp-api"></div><div id="min-max"></div><div id="info-desc"></div></div>
                 </figcaption>
               </a>
             `;
